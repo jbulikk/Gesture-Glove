@@ -55,17 +55,17 @@ int main(void)
 
   while (1)
   {
-    // HAL_Delay(1000);
+    HAL_Delay(1000);
     
-    sprintf(msg, "1:=%f\n\r", imu_sensor_data.roll_complementary);
-    CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+    // sprintf(msg, "1:=%f\n\r", imu_sensor_data.roll_complementary);
+    // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
-    sprintf(msg, "1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", adc_value[0], adc_value[1], adc_value[2], adc_value[3], adc_value[4]);
-    CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+    // sprintf(msg, "1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", adc_value[0], adc_value[1], adc_value[2], adc_value[3], adc_value[4]);
+    // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
-    HAL_Delay(500);
+    // HAL_Delay(500);
 
-    recognise_gesture_and_send_by_CDC(&imu_sensor_data, &hand);
+    // recognise_gesture_and_send_by_CDC(&imu_sensor_data, &hand);
   }
 }
 
@@ -95,8 +95,23 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   if (GPIO_Pin == GPIO_PIN_5)
   {
     MPU6050_DMA_read_all_data(&hi2c1, &MPU6050_buff);
-  }  
+  }
+
+  if (GPIO_Pin == GPIO_PIN_12) 
+  {
+      if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_SET)
+      {
+        sprintf(msg, "12:=dol\n\r");
+        CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+      }
+      else
+      {
+        sprintf(msg, "12:=gora\n\r");
+        CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+      }
+  }
 }
+
 
 /**
   * @brief System Clock Configuration
