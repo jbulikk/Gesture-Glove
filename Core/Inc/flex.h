@@ -26,4 +26,4 @@ typedef struct {
     volatile uint16_t pinky;
 } FlexHandRaw;
 
-void flex_assign_raw_values_to_fingers(uint8_t *data_buffer, FlexHandRaw *handStructure);
+void flex_assign_raw_values_to_fingers(uint16_t *data_buffer, FlexHandRaw *handStructure);

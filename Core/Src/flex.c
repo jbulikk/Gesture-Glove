@@ -1,6 +1,6 @@
 #include "flex.h"
 
-void flex_assign_raw_values_to_fingers(uint8_t *data_buffer, FlexHandRaw *handStructure)
+void flex_assign_raw_values_to_fingers(uint16_t *data_buffer, FlexHandRaw *handStructure)
 {
     handStructure->thumb = data_buffer[ORDER_THUMB];
     handStructure->index = data_buffer[ORDER_INDEX];

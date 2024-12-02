@@ -1,4 +1,5 @@
 "./Core/Src/adc.o"
+"./Core/Src/decision_unit.o"
 "./Core/Src/dma.o"
 "./Core/Src/flex.o"
 "./Core/Src/gpio.o"

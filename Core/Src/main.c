@@ -24,13 +24,17 @@
 #include "usart.h"
 #include "usb_device.h"
 #include "gpio.h"
-#include "imu.h"
+// #include "imu.h"
+#include "decision_unit.h"
 
 char msg[50];
 volatile uint8_t MPU6050_buff[14];
 volatile static uint16_t adc_value[5];
 float current_angle_main;
 volatile ImuData imu_sensor_data;
+volatile FlexHandRaw hand;
+volatile uint32_t tick;
+volatile uint8_t imu_read_delay;
 
 void SystemClock_Config(void);
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c);
@@ -51,10 +55,33 @@ int main(void)
 
   while (1)
   {
-    sprintf(msg, "pitch:=%f \n\r", imu_sensor_data.pitch_complementary);
+    // HAL_Delay(1000);
+    
+    sprintf(msg, "1:=%f\n\r", imu_sensor_data.roll_complementary);
     CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
-    HAL_Delay(250);
+    sprintf(msg, "1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", adc_value[0], adc_value[1], adc_value[2], adc_value[3], adc_value[4]);
+    CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+
+    HAL_Delay(500);
+
+    recognise_gesture_and_send_by_CDC(&imu_sensor_data, &hand);
+  }
+}
+
+void SysTick_Handler(void)
+{
+  HAL_IncTick();
+  tick++;
+
+  // sprintf(msg, "1:=%u, 2:%u\n\r", hand.pinky, hand.index);
+  // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+
+  if(tick >= 20)
+  {
+    flex_assign_raw_values_to_fingers(&adc_value, &hand);
+
+    tick = 0;
   }
 }
 
@@ -68,8 +95,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   if (GPIO_Pin == GPIO_PIN_5)
   {
     MPU6050_DMA_read_all_data(&hi2c1, &MPU6050_buff);
-  }
-  
+  }  
 }
 
 /**

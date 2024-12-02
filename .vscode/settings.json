@@ -4,6 +4,12 @@
         "gpio.h": "c",
         "imu.h": "c",
         "dma.h": "c",
-        "usb_device.h": "c"
+        "usb_device.h": "c",
+        "main.h": "c",
+        "i2c.h": "c",
+        "stm32f4xx_it.h": "c",
+        "flex.h": "c",
+        "decision_unit.h": "c",
+        "stdbool.h": "c"
     }
 }
