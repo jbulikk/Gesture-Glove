@@ -35,6 +35,10 @@ volatile ImuData imu_sensor_data;
 volatile FlexHandRaw hand;
 volatile uint32_t tick;
 volatile uint8_t imu_read_delay;
+volatile uint32_t last_debounce_time = 0;
+static const uint8_t debounce_delay = 50;
+volatile GPIO_PinState current_time;
+volatile GPIO_PinState last_state = GPIO_PIN_SET;
 
 void SystemClock_Config(void);
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c);
@@ -99,16 +103,36 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
   if (GPIO_Pin == GPIO_PIN_12) 
   {
-      if (HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12) == GPIO_PIN_SET)
+    uint32_t current_time = HAL_GetTick();
+    last_debounce_time = 0;
+
+    GPIO_PinState current_state = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);
+
+    if (GPIO_Pin == GPIO_PIN_12) 
+    {
+      uint32_t current_time = HAL_GetTick();
+      static uint32_t last_debounce_time = 0;
+      static GPIO_PinState last_state = GPIO_PIN_SET;
+
+      GPIO_PinState current_state = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);
+
+      if ((current_time - last_debounce_time) > debounce_delay && current_state != last_state) 
       {
-        sprintf(msg, "12:=dol\n\r");
-        CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+          last_debounce_time = current_time;
+          last_state = current_state;
+
+          if (current_state == GPIO_PIN_SET)
+          {
+              sprintf(msg, "12:=gora\n\r");
+          }
+          else
+          {
+              sprintf(msg, "12:=dol\n\r");
+          }
+
+          CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
       }
-      else
-      {
-        sprintf(msg, "12:=gora\n\r");
-        CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
-      }
+    }
   }
 }
 

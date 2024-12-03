@@ -35,7 +35,7 @@ Core/Src/decision_unit.o: ../Core/Src/decision_unit.c \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h \
  ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h \
  C:\Users\JakubBulik\STM32CubeIDE\Glove\MPU6050_STM32_HAL\Inc\mpu6050.h \
- ../Core/Inc/flex.h
+ ../Core/Inc/flex.h ../Core/Inc/electrodes.h
 ../Core/Inc/decision_unit.h:
 ../Core/Inc/imu.h:
 ../Core/Inc/i2c.h:
@@ -76,3 +76,4 @@ Core/Src/decision_unit.o: ../Core/Src/decision_unit.c \
 ../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_hal_pcd_ex.h:
 C:\Users\JakubBulik\STM32CubeIDE\Glove\MPU6050_STM32_HAL\Inc\mpu6050.h:
 ../Core/Inc/flex.h:
+../Core/Inc/electrodes.h:

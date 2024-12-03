@@ -5,6 +5,7 @@
 
 #include <stdint.h>
 #include "i2c.h"
+#include "electrodes.h"
 
 #define ORDER_THUMB  0
 #define ORDER_INDEX  1
@@ -24,6 +25,7 @@ typedef struct {
     volatile uint16_t middle;
     volatile uint16_t ring;  
     volatile uint16_t pinky;
+    volatile Electrodes electrodes;
 } FlexHandRaw;
 
 void flex_assign_raw_values_to_fingers(uint16_t *data_buffer, FlexHandRaw *handStructure);
