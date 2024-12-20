@@ -7,11 +7,13 @@
 #include "i2c.h"
 #include "electrodes.h"
 
-#define ORDER_THUMB  0
-#define ORDER_INDEX  1
-#define ORDER_MIDDLE 2
-#define ORDER_RING   3
-#define ORDER_PINKY  4
+typedef enum {
+    ORDER_THUMB = 4,
+    ORDER_INDEX = 1,
+    ORDER_MIDDLE = 2,
+    ORDER_RING = 3,
+    ORDER_PINKY = 0
+} FingersOrder;
 
 #define MAX_RAW_VALUE_LONG_FLEX
 #define MIN_RAW_VALUE_LONG_FLEX

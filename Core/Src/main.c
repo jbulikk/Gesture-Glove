@@ -59,12 +59,14 @@ int main(void)
 
   while (1)
   {
-    HAL_Delay(1000);
+    // HAL_Delay(250);
     
-    // sprintf(msg, "1:=%f\n\r", imu_sensor_data.roll_complementary);
-    // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+    sprintf(msg, "1:=%f\n\r", imu_sensor_data.roll_complementary);
+    CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
-    // sprintf(msg, "1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", adc_value[0], adc_value[1], adc_value[2], adc_value[3], adc_value[4]);
+    HAL_Delay(250);
+
+    // sprintf(msg, "1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", adc_value[4], adc_value[1], adc_value[2], adc_value[3], adc_value[0]);
     // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
     // HAL_Delay(500);
