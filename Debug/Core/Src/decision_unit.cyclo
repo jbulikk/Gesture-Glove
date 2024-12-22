@@ -1,4 +1,4 @@
 decision_unit.c:21:6:check_threshold_float	3
 decision_unit.c:26:6:check_threshold_uint16	3
-decision_unit.c:31:6:is_gesture_recognized	7
-decision_unit.c:42:6:recognise_gesture_and_send_by_CDC	3
+decision_unit.c:42:6:is_gesture_recognized	8
+decision_unit.c:54:6:recognise_gesture_and_send_by_CDC	3

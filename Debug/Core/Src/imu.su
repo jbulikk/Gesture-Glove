@@ -9,4 +9,4 @@
 ../Core/Src/imu.c:263:9:MPU6050_process_3_axis_data	24	static
 ../Core/Src/imu.c:278:9:MPU6050_process_6_axis_data	24	static
 ../Core/Src/imu.c:300:6:MPU6050_process_6_axis_data_and_calculate_angles_old	48	static
-../Core/Src/imu.c:341:6:MPU6050_process_6_axis_data_and_calculate_angles	48	static
+../Core/Src/imu.c:340:6:MPU6050_process_6_axis_data_and_calculate_angles	48	static

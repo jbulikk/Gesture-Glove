@@ -1,1 +1,6 @@
 ../Core/Src/flex.c:3:6:flex_assign_raw_values_to_fingers	16	static
+../Core/Src/flex.c:12:6:calibrate_ADC_raw	48	static
+../Core/Src/flex.c:33:6:calculate_ADC_raw_diff	32	static
+../Core/Src/flex.c:41:6:assign_average_values	24	static
+../Core/Src/flex.c:50:6:calibrate_ADC_voltage	56	static
+../Core/Src/flex.c:75:6:calculate_ADC_voltage_diff	32	static

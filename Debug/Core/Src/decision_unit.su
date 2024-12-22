@@ -1,4 +1,4 @@
 ../Core/Src/decision_unit.c:21:6:check_threshold_float	24	static
-../Core/Src/decision_unit.c:26:6:check_threshold_uint16	16	static
-../Core/Src/decision_unit.c:31:6:is_gesture_recognized	24	static
-../Core/Src/decision_unit.c:42:6:recognise_gesture_and_send_by_CDC	24	static
+../Core/Src/decision_unit.c:26:6:check_threshold_uint16	24	static
+../Core/Src/decision_unit.c:42:6:is_gesture_recognized	24	static
+../Core/Src/decision_unit.c:54:6:recognise_gesture_and_send_by_CDC	32	static

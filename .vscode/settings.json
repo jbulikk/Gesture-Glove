@@ -10,6 +10,7 @@
         "stm32f4xx_it.h": "c",
         "flex.h": "c",
         "decision_unit.h": "c",
-        "stdbool.h": "c"
+        "stdbool.h": "c",
+        "stdint.h": "c"
     }
 }

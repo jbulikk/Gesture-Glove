@@ -27,25 +27,34 @@
 // #include "imu.h"
 #include "decision_unit.h"
 
+#define NUM_SAMPLES 10
+#define ADC_RESOLUTION 4095
+#define V_REF 5 
+
 char msg[50];
 volatile uint8_t MPU6050_buff[14];
 volatile static uint16_t adc_value[5];
 float current_angle_main;
 volatile ImuData imu_sensor_data;
-volatile FlexHandRaw hand;
+volatile FlexHand hand;
+volatile FlexHand hand_mid;
 volatile uint32_t tick;
 volatile uint8_t imu_read_delay;
 volatile uint32_t last_debounce_time = 0;
-static const uint8_t debounce_delay = 50;
+static const uint8_t debounce_delay = 800;
 volatile GPIO_PinState current_time;
 volatile GPIO_PinState last_state = GPIO_PIN_SET;
+uint16_t max_init_adc_values[7];
+uint16_t diff_init_adc_values[7];
+uint16_t min_init_adc_values[7];
+uint16_t adc_buffer[7][NUM_SAMPLES];
 
 void SystemClock_Config(void);
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c);
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 
 int main(void)
-{
+{  
   HAL_Init();
   SystemClock_Config();
   MX_GPIO_Init();
@@ -57,21 +66,43 @@ int main(void)
   MPU6050_DMA_mode_init(&hi2c1);
   HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_value, 7);
 
+  calibrate_ADC_raw(adc_value, adc_buffer, max_init_adc_values, NUM_SAMPLES);
+  
+  sprintf(msg, "max: 1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", max_init_adc_values[4], max_init_adc_values[1], max_init_adc_values[0], max_init_adc_values[3], max_init_adc_values[2]);
+  CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+
+  HAL_Delay(2000);
+
+  calibrate_ADC_raw(adc_value, adc_buffer, min_init_adc_values, NUM_SAMPLES);
+  
+  sprintf(msg, "min: 1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", min_init_adc_values[4], min_init_adc_values[1], min_init_adc_values[0], min_init_adc_values[3], min_init_adc_values[2]);
+  CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+
+  calculate_ADC_raw_diff(max_init_adc_values, min_init_adc_values, diff_init_adc_values);
+  assign_average_values(max_init_adc_values, diff_init_adc_values, &hand_mid);
+
+  sprintf(msg, "diff: 1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", hand_mid.thumb, hand_mid.index, hand_mid.middle, hand_mid.ring, hand_mid.pinky);
+  CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+
   while (1)
   {
-    // HAL_Delay(250);
     
-    sprintf(msg, "1:=%f\n\r", imu_sensor_data.roll_complementary);
+    // sprintf(msg, "1:=%f\n\r", imu_sensor_data.roll_complementary);
+    // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+    // sprintf(msg, "1:=%f\n\r", imu_sensor_data.pitch_complementary);
+    // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+
+    HAL_Delay(500);
+
+    sprintf(msg, "1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", adc_value[4], adc_value[1], adc_value[0], adc_value[3], adc_value[2]);
     CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
-    HAL_Delay(250);
-
-    // sprintf(msg, "1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", adc_value[4], adc_value[1], adc_value[2], adc_value[3], adc_value[0]);
+    // sprintf(msg, "1:=%f\n\r", imu_sensor_data.roll_complementary);
     // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
     // HAL_Delay(500);
 
-    // recognise_gesture_and_send_by_CDC(&imu_sensor_data, &hand);
+    recognise_gesture_and_send_by_CDC(&imu_sensor_data, &hand, &hand_mid);
   }
 }
 
@@ -137,7 +168,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     }
   }
 }
-
 
 /**
   * @brief System Clock Configuration
