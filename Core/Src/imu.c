@@ -321,11 +321,11 @@ void MPU6050_process_6_axis_data_and_calculate_angles_old(uint8_t *data_buffer, 
     imuStruct->roll_gyro = imuStruct->gyroscope_raw.x * 180.0 / M_PI;
     imuStruct->roll_complementary = alpha * (imuStruct->roll_complementary + imuStruct->roll_gyro * sampling_time_sec) + (1.0 - alpha) * imuStruct->roll_acc;
     
-    // imuStruct->pitch_acc = (atan2(imuStruct->accelerometer_scaled.x, 
-    // sqrt(imuStruct->accelerometer_scaled.y*imuStruct->accelerometer_scaled.y + imuStruct->accelerometer_scaled.z*imuStruct->accelerometer_scaled.z))*180.0)/M_PI;
-    // imuStruct->pitch_gyro = imuStruct->gyroscope_raw.y * 180.0 / M_PI;
-    // imuStruct->pitch_complementary = alpha * (imuStruct->pitch_complementary + imuStruct->pitch_gyro * sampling_time_sec) + (1.0 - alpha) * imuStruct->pitch_acc;
-    
+    imuStruct->pitch_acc = (atan2(imuStruct->accelerometer_scaled.x, 
+    sqrt(imuStruct->accelerometer_scaled.y*imuStruct->accelerometer_scaled.y + imuStruct->accelerometer_scaled.z*imuStruct->accelerometer_scaled.z))*180.0)/M_PI;
+    imuStruct->pitch_gyro = imuStruct->gyroscope_raw.y * 180.0 / M_PI;
+    imuStruct->pitch_complementary = alpha * (imuStruct->pitch_complementary + imuStruct->pitch_gyro * sampling_time_sec) + (1.0 - alpha) * imuStruct->pitch_acc;
+ 
 
     if(debug == 2)
     {
@@ -356,11 +356,14 @@ void MPU6050_process_6_axis_data_and_calculate_angles(uint8_t *data_buffer, ImuD
     imuStruct->gyroscope_scaled.y = (float)imuStruct->gyroscope_raw.y / gyro_sens;
     imuStruct->gyroscope_scaled.z = (float)imuStruct->gyroscope_raw.z / gyro_sens;
 
+    imuStruct->pitch_acc = atan2(imuStruct->accelerometer_scaled.y, imuStruct->accelerometer_scaled.z) * 180.0/M_PI;
+    imuStruct->pitch_gyro = imuStruct->gyroscope_scaled.x;
+    imuStruct->pitch_complementary = alpha * (imuStruct->pitch_complementary + imuStruct->pitch_gyro * sampling_time_sec) + (1.0 - alpha) * imuStruct->pitch_acc;
+   
     imuStruct->roll_acc = atan2(imuStruct->accelerometer_scaled.x, imuStruct->accelerometer_scaled.z) * 180.0/M_PI;
     imuStruct->roll_gyro = imuStruct->gyroscope_scaled.y;
     imuStruct->roll_complementary = alpha * (imuStruct->roll_complementary + imuStruct->roll_gyro * sampling_time_sec) + (1.0 - alpha) * imuStruct->roll_acc;
-    
-    
+   
     if(debug == 2)
     {
         sprintf(msg2, "0:=%d, 1:=%d 2:=%d, 3:=%d, 4:=%d 5:=%d\n\r", data_buffer[0], data_buffer[1],data_buffer[2],data_buffer[3],data_buffer[4],data_buffer[5]);

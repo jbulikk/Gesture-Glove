@@ -46,7 +46,7 @@ int main(void)
   MX_USART1_UART_Init();
   MPU6050_DMA_mode_init(&hi2c1);
   HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_value, 7);
-
+  HAL_Delay(2000);
   calibrate_ADC_raw(adc_value, adc_buffer, max_init_adc_values, NUM_SAMPLES);
   
   // sprintf(msg, "max: 1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", max_init_adc_values[4], max_init_adc_values[1], max_init_adc_values[0], max_init_adc_values[3], max_init_adc_values[2]);
@@ -68,10 +68,8 @@ int main(void)
   while (1)
   {
     
-    // sprintf(msg, "1:=%f\n\r", imu_sensor_data.roll_complementary);
-    // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
-    // sprintf(msg, "1:=%f\n\r", imu_sensor_data.pitch_complementary);
-    // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+    sprintf(msg, "roll:=%f, pitch:=%f\n\r", imu_sensor_data.roll_complementary, imu_sensor_data.pitch_complementary);
+    CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
     HAL_Delay(500);
 
@@ -94,10 +92,7 @@ void SysTick_Handler(void)
 
   if(tick >= 20)
   {
-    // flex_assign_raw_values_to_fingers(&adc_value, &hand);
     
-    sprintf(msg, "1:=%u, 2:%u, 3:=%u, 4:%u, 5:=%u, \n\r", hand.thumb, hand.index, hand.middle, hand.ring, hand.pinky);
-    CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
     tick = 0;
   }
