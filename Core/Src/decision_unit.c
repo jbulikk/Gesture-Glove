@@ -6,7 +6,7 @@ GestureConfig gestures[] = {
 //     THUMB      INDEX          MIDDLE       RING       PINKY      ROLL_HIGH       ROLL_LOW       PITCH       YAW      ACTION       MESSAGE 
     {{STRAIGHT}, {BENT}, {BENT}, {BENT}, {BENT}, {75, 110}, {75, 110},/* {,}, {,}, */ "OK"},
     {{BENT}, {BENT}, {BENT}, {BENT}, {BENT}, {-180,180}, {-180,180},/* {,}, {,}, */ "FIST"},
-    {{STRAIGHT}, {STRAIGHT}, {STRAIGHT}, {STRAIGHT}, {STRAIGHT}, {-50,0},{0,50},/* {,}, {,}, */ "IDLE"},
+    {{STRAIGHT}, {STRAIGHT}, {STRAIGHT}, {STRAIGHT}, {STRAIGHT}, {-180,0},{0,180},/* {,}, {,}, */ "IDLE"},
     // {{,}, {,}, {,}, {,}, {,}, {,},/*{,}, {,}, {,}, */ "THREE"},
     // {{,}, {,}, {,}, {,}, {,}, {,},/*{,}, {,}, {,}, */ "FOUR"},
     // {{,}, {,}, {,}, {,}, {,}, {,},/*{,}, {,}, {,}, */ "FIVE"},
