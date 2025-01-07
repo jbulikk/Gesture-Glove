@@ -17,20 +17,30 @@ typedef struct {
 
 typedef enum {
     STRAIGHT,
-    BENT
-} FingerState;
+    BENT,
+    ANY
+} FingerPosition;
+
+typedef enum {
+    CLOSE,
+    APART,
+    EACH
+} FingerTouch;
+
 
 typedef struct {
-    FingerState state;
+    FingerPosition state;
     float mid_value;
 } FingerConfig;
 
 typedef struct {
-    FingerState thumb;
-    FingerState index;
-    FingerState middle;
-    FingerState ring;
-    FingerState pinky;
+    FingerPosition thumb;
+    FingerPosition index;
+    FingerPosition middle;
+    FingerPosition ring;
+    FingerPosition pinky;
+    FingerTouch e_index;
+    FingerTouch e_middle;
     ThresholdAngle roll_high;
     ThresholdAngle roll_low;
     // ThresholdAngle pitch;
@@ -45,6 +55,7 @@ typedef struct {
 } DynamicGestureConfig;
 
 bool check_threshold_float(float value, ThresholdAngle threshold);
-bool check_threshold_uint16(uint16_t value, FingerState fingerState, uint16_t mid_value);
+bool check_threshold_uint16(uint16_t value, FingerPosition fingerState, uint16_t mid_value);
 bool is_gesture_recognized(GestureConfig *gesture_arg ,ImuData *imu_arg, FlexHand *hand_arg, FlexHand *hand_mid_arg);
 void recognise_gesture_and_send_by_CDC(ImuData *imu_arg, FlexHand *hand_arg, FlexHand *hand_mid_arg);
+bool check_fingers_connected(uint8_t value, FingerTouch fingerTouch);

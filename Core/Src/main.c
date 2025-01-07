@@ -48,28 +48,24 @@ int main(void)
   HAL_ADC_Start_DMA(&hadc1, (uint32_t*)adc_value, 7);
   HAL_Delay(2000);
   calibrate_ADC_raw(adc_value, adc_buffer, max_init_adc_values, NUM_SAMPLES);
-  
-  // sprintf(msg, "max: 1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", max_init_adc_values[4], max_init_adc_values[1], max_init_adc_values[0], max_init_adc_values[3], max_init_adc_values[2]);
-  // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+  sprintf(msg, "max: 1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", max_init_adc_values[4], max_init_adc_values[1], max_init_adc_values[0], max_init_adc_values[3], max_init_adc_values[2]);
+  CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
   HAL_Delay(2000);
-
-  // calibrate_ADC_raw(adc_value, adc_buffer, min_init_adc_values, NUM_SAMPLES);
+  calibrate_ADC_raw(adc_value, adc_buffer, min_init_adc_values, NUM_SAMPLES);
   
-  // sprintf(msg, "min: 1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", min_init_adc_values[4], min_init_adc_values[1], min_init_adc_values[0], min_init_adc_values[3], min_init_adc_values[2]);
-  // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+  sprintf(msg, "min: 1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", min_init_adc_values[4], min_init_adc_values[1], min_init_adc_values[0], min_init_adc_values[3], min_init_adc_values[2]);
+  CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
-  // calculate_ADC_raw_diff(max_init_adc_values, min_init_adc_values, diff_init_adc_values);
-  // assign_average_values(max_init_adc_values, diff_init_adc_values, &hand_mid);
+  calculate_ADC_raw_diff(max_init_adc_values, min_init_adc_values, diff_init_adc_values);
+  assign_average_values(max_init_adc_values, diff_init_adc_values, &hand_mid);
 
-  // sprintf(msg, "diff: 1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", hand_mid.thumb, hand_mid.index, hand_mid.middle, hand_mid.ring, hand_mid.pinky);
-  // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
   while (1)
   {
     
-    sprintf(msg, "roll:=%f, pitch:=%f\n\r", imu_sensor_data.roll_complementary, imu_sensor_data.pitch_complementary);
-    CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+    // sprintf(msg, "roll:=%f, pitch:=%f\n\r", imu_sensor_data.roll_complementary, imu_sensor_data.pitch_complementary);
+    // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
     HAL_Delay(500);
 
@@ -81,7 +77,7 @@ int main(void)
 
     // HAL_Delay(500);
 
-    // recognise_gesture_and_send_by_CDC(&imu_sensor_data, &hand, &hand_mid);
+    recognise_gesture_and_send_by_CDC(&imu_sensor_data, &hand, &hand_mid);
   }
 }
 
@@ -116,36 +112,51 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     MPU6050_DMA_read_all_data(&hi2c1, &MPU6050_buff);
   }
 
-  if (GPIO_Pin == GPIO_PIN_12) 
+  if (GPIO_Pin == GPIO_PIN_12 || GPIO_Pin == GPIO_PIN_13) 
   {
-    uint32_t current_time = HAL_GetTick();
-    last_debounce_time = 0;
-
-    GPIO_PinState current_state = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);
-
     if (GPIO_Pin == GPIO_PIN_12) 
     {
       uint32_t current_time = HAL_GetTick();
       static uint32_t last_debounce_time = 0;
       static GPIO_PinState last_state = GPIO_PIN_SET;
-
       GPIO_PinState current_state = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_12);
 
       if ((current_time - last_debounce_time) > debounce_delay && current_state != last_state) 
       {
-          last_debounce_time = current_time;
-          last_state = current_state;
+        last_debounce_time = current_time;
+        last_state = current_state;
 
-          if (current_state == GPIO_PIN_SET)
-          {
-              sprintf(msg, "12:=gora\n\r");
-          }
-          else
-          {
-              sprintf(msg, "12:=dol\n\r");
-          }
+        if (current_state == GPIO_PIN_SET)
+        {
+          hand.electrodes.middle = 0;
+        }
+        else
+        {
+          hand.electrodes.middle = 1;
+        }
+      }
+    }
 
-          CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+    if (GPIO_Pin == GPIO_PIN_13) 
+    {
+      uint32_t current_time = HAL_GetTick();
+      static uint32_t last_debounce_time = 0;
+      static GPIO_PinState last_state = GPIO_PIN_SET;
+      GPIO_PinState current_state = HAL_GPIO_ReadPin(GPIOB, GPIO_PIN_13);
+
+      if ((current_time - last_debounce_time) > debounce_delay && current_state != last_state) 
+      {
+        last_debounce_time = current_time;
+        last_state = current_state;
+
+        if (current_state == GPIO_PIN_SET)
+        {
+          hand.electrodes.index = 0;
+        }
+        else
+        {
+          hand.electrodes.index = 1; 
+        }
       }
     }
   }
