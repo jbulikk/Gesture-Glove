@@ -45,6 +45,6 @@ typedef struct {
 } DynamicGestureConfig;
 
 bool check_threshold_float(float value, ThresholdAngle threshold);
-bool check_threshold_uint16(uint16_t value, FingerState fingerState, FlexHand *hand_mid);
+bool check_threshold_uint16(uint16_t value, FingerState fingerState, uint16_t mid_value);
 bool is_gesture_recognized(GestureConfig *gesture_arg ,ImuData *imu_arg, FlexHand *hand_arg, FlexHand *hand_mid_arg);
 void recognise_gesture_and_send_by_CDC(ImuData *imu_arg, FlexHand *hand_arg, FlexHand *hand_mid_arg);

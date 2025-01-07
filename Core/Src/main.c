@@ -1,22 +1,3 @@
-/* USER CODE BEGIN Header */
-/**
-  ******************************************************************************
-  * @file           : main.c
-  * @brief          : Main program body
-  ******************************************************************************
-  * @attention
-  *
-  * Copyright (c) 2024 STMicroelectronics.
-  * All rights reserved.
-  *
-  * This software is licensed under terms that can be found in the LICENSE file
-  * in the root directory of this software component.
-  * If no LICENSE file comes with this software, it is provided AS-IS.
-  *
-  ******************************************************************************
-  */
-/* USER CODE END Header */
-/* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
 #include "dma.h"
@@ -68,21 +49,21 @@ int main(void)
 
   calibrate_ADC_raw(adc_value, adc_buffer, max_init_adc_values, NUM_SAMPLES);
   
-  sprintf(msg, "max: 1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", max_init_adc_values[4], max_init_adc_values[1], max_init_adc_values[0], max_init_adc_values[3], max_init_adc_values[2]);
-  CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+  // sprintf(msg, "max: 1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", max_init_adc_values[4], max_init_adc_values[1], max_init_adc_values[0], max_init_adc_values[3], max_init_adc_values[2]);
+  // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
   HAL_Delay(2000);
 
-  calibrate_ADC_raw(adc_value, adc_buffer, min_init_adc_values, NUM_SAMPLES);
+  // calibrate_ADC_raw(adc_value, adc_buffer, min_init_adc_values, NUM_SAMPLES);
   
-  sprintf(msg, "min: 1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", min_init_adc_values[4], min_init_adc_values[1], min_init_adc_values[0], min_init_adc_values[3], min_init_adc_values[2]);
-  CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+  // sprintf(msg, "min: 1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", min_init_adc_values[4], min_init_adc_values[1], min_init_adc_values[0], min_init_adc_values[3], min_init_adc_values[2]);
+  // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
-  calculate_ADC_raw_diff(max_init_adc_values, min_init_adc_values, diff_init_adc_values);
-  assign_average_values(max_init_adc_values, diff_init_adc_values, &hand_mid);
+  // calculate_ADC_raw_diff(max_init_adc_values, min_init_adc_values, diff_init_adc_values);
+  // assign_average_values(max_init_adc_values, diff_init_adc_values, &hand_mid);
 
-  sprintf(msg, "diff: 1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", hand_mid.thumb, hand_mid.index, hand_mid.middle, hand_mid.ring, hand_mid.pinky);
-  CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+  // sprintf(msg, "diff: 1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", hand_mid.thumb, hand_mid.index, hand_mid.middle, hand_mid.ring, hand_mid.pinky);
+  // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
   while (1)
   {
@@ -94,15 +75,15 @@ int main(void)
 
     HAL_Delay(500);
 
-    sprintf(msg, "1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", adc_value[4], adc_value[1], adc_value[0], adc_value[3], adc_value[2]);
-    CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
+    // sprintf(msg, "1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", adc_value[4], adc_value[1], adc_value[0], adc_value[3], adc_value[2]);
+    // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
     // sprintf(msg, "1:=%f\n\r", imu_sensor_data.roll_complementary);
     // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
     // HAL_Delay(500);
 
-    recognise_gesture_and_send_by_CDC(&imu_sensor_data, &hand, &hand_mid);
+    // recognise_gesture_and_send_by_CDC(&imu_sensor_data, &hand, &hand_mid);
   }
 }
 
@@ -111,12 +92,12 @@ void SysTick_Handler(void)
   HAL_IncTick();
   tick++;
 
-  // sprintf(msg, "1:=%u, 2:%u\n\r", hand.pinky, hand.index);
-  // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
-
   if(tick >= 20)
   {
-    flex_assign_raw_values_to_fingers(&adc_value, &hand);
+    // flex_assign_raw_values_to_fingers(&adc_value, &hand);
+    
+    sprintf(msg, "1:=%u, 2:%u, 3:=%u, 4:%u, 5:=%u, \n\r", hand.thumb, hand.index, hand.middle, hand.ring, hand.pinky);
+    CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
 
     tick = 0;
   }
@@ -125,6 +106,12 @@ void SysTick_Handler(void)
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)
 {
   MPU6050_process_6_axis_data_and_calculate_angles(&MPU6050_buff, &imu_sensor_data);
+}
+
+void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
+    if (hadc->Instance == ADC1) {
+      flex_assign_raw_values_to_fingers(&adc_value, &hand);
+    }
 }
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
@@ -168,7 +155,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
     }
   }
 }
-
 /**
   * @brief System Clock Configuration
   * @retval None

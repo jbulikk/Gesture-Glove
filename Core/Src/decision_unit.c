@@ -23,16 +23,12 @@ bool check_threshold_float(float value, ThresholdAngle threshold)
     return value >= threshold.min_value && value <= threshold.max_value;
 }
 
-bool check_threshold_uint16(uint16_t value, FingerState fingerState, FlexHand *hand_mid)
+bool check_threshold_uint16(uint16_t value, FingerState fingerState, uint16_t mid_value)
 {
-    uint16_t mid_value = 0;
-    
     switch (fingerState) {
         case STRAIGHT:
-            mid_value = hand_mid->thumb;
             return value >= mid_value;
         case BENT:
-            mid_value = hand_mid->thumb;
             return value < mid_value;
         default:
             return false;
@@ -41,11 +37,11 @@ bool check_threshold_uint16(uint16_t value, FingerState fingerState, FlexHand *h
 
 bool is_gesture_recognized(GestureConfig *gesture_arg, ImuData *imu_arg, FlexHand *hand_arg, FlexHand *hand_mid_arg)
 {
-     return check_threshold_uint16(hand_arg->thumb, gesture_arg->thumb, hand_mid_arg) &&
-           check_threshold_uint16(hand_arg->index, gesture_arg->index, hand_mid_arg) &&
-           check_threshold_uint16(hand_arg->middle, gesture_arg->middle, hand_mid_arg) &&
-           check_threshold_uint16(hand_arg->ring, gesture_arg->ring, hand_mid_arg) &&
-           check_threshold_uint16(hand_arg->pinky, gesture_arg->pinky, hand_mid_arg) &&
+     return check_threshold_uint16(hand_arg->thumb, gesture_arg->thumb, hand_mid_arg->thumb) &&
+           check_threshold_uint16(hand_arg->index, gesture_arg->index, hand_mid_arg->index) &&
+           check_threshold_uint16(hand_arg->middle, gesture_arg->middle, hand_mid_arg->middle) &&
+           check_threshold_uint16(hand_arg->ring, gesture_arg->ring, hand_mid_arg->ring) &&
+           check_threshold_uint16(hand_arg->pinky, gesture_arg->pinky, hand_mid_arg->pinky) &&
            
            (check_threshold_float(imu_arg->roll_complementary, gesture_arg->roll_high) ||
             check_threshold_float(imu_arg->roll_complementary, gesture_arg->roll_low));
