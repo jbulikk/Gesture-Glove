@@ -43,7 +43,8 @@ typedef struct {
     FingerTouch e_middle;
     ThresholdAngle roll_high;
     ThresholdAngle roll_low;
-    // ThresholdAngle pitch;
+    ThresholdAngle pitch_high;
+    ThresholdAngle pitch_low;
     // ThresholdAngle yaw;
     // GestureAction action;
     const char *message;

@@ -77,32 +77,26 @@ uint8_t MPU6050_standard_init(I2C_HandleTypeDef *I2Cx)
     }
     
 
-    if (check == 104) // 0x68 will be returned by the sensor if everything goes well
+    if (check == 104)
     {
-        // power management register 0X6B we should write all 0's to wake the sensor up
         Data = 0;
         if(HAL_I2C_Mem_Write(I2Cx, MPU6050_ADDRESS, 0x6B, 1, &Data, 1, i2c_timeout) != HAL_OK)
         {
             return 2;
         }
 
-        // Set DATA RATE of 1KHz by writing SMPLRT_DIV register
         Data = 0x07;
         if(HAL_I2C_Mem_Write(I2Cx, MPU6050_ADDRESS, 0x19, 1, &Data, 1, i2c_timeout)  != HAL_OK)
         {
             return 3;
         }
 
-        // Set accelerometer configuration in ACCEL_CONFIG Register
-        // XA_ST=0,YA_ST=0,ZA_ST=0, FS_SEL=0 -> � 2g
         Data = 0x00;
         if(HAL_I2C_Mem_Write(I2Cx, MPU6050_ADDRESS, 0x1C, 1, &Data, 1, i2c_timeout)  != HAL_OK)
         {
             return 4;
         }
 
-        // Set Gyroscopic configuration in GYRO_CONFIG Register
-        // XG_ST=0,YG_ST=0,ZG_ST=0, FS_SEL=0 -> � 250 �/s
         Data = 0x00;
         if(HAL_I2C_Mem_Write(I2Cx, MPU6050_ADDRESS, 0x1B, 1, &Data, 1, i2c_timeout)  != HAL_OK)
         {
@@ -186,16 +180,12 @@ uint8_t MPU6050_interrupt_mode_init(I2C_HandleTypeDef *I2Cx)
             return 3;
         }
 
-        // Set accelerometer configuration in ACCEL_CONFIG Register
-        // XA_ST=0,YA_ST=0,ZA_ST=0, FS_SEL=0 -> � 2g
         Data = 0x00;
         if(HAL_I2C_Mem_Write(I2Cx, MPU6050_ADDRESS, 0x1C, 1, &Data, 1, i2c_timeout)  != HAL_OK)
         {
             return 4;
         }
 
-        // Set Gyroscopic configuration in GYRO_CONFIG Register
-        // XG_ST=0,YG_ST=0,ZG_ST=0, FS_SEL=0 -> � 250 �/s
         Data = 0x00;
         if(HAL_I2C_Mem_Write(I2Cx, MPU6050_ADDRESS, 0x1B, 1, &Data, 1, i2c_timeout)  != HAL_OK)
         {
@@ -332,9 +322,6 @@ void MPU6050_process_6_axis_data_and_calculate_angles_old(uint8_t *data_buffer, 
         sprintf(msg2, "0:=%d, 1:=%d 2:=%d, 3:=%d, 4:=%d 5:=%d\n\r", data_buffer[0], data_buffer[1],data_buffer[2],data_buffer[3],data_buffer[4],data_buffer[5]);
         CDC_Transmit_FS((uint8_t *)msg2, strlen(msg2));
     }
-
-    // imuStruct->accel_angle = -atan2(imuStruct->accelerometer.z, -imuStruct->accelerometer.x) * (180/M_PI);
-    // imuStruct->gyro_angle = imuStruct->gyroscope.y / 131.0;  
 }
 
 void MPU6050_process_6_axis_data_and_calculate_angles(uint8_t *data_buffer, ImuData *imuStruct)

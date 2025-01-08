@@ -20,7 +20,6 @@ volatile ImuData imu_sensor_data;
 volatile FlexHand hand;
 volatile FlexHand hand_mid;
 volatile uint32_t tick;
-volatile uint8_t imu_read_delay;
 volatile uint32_t last_debounce_time = 0;
 static const uint8_t debounce_delay = 800;
 volatile GPIO_PinState current_time;
@@ -63,20 +62,7 @@ int main(void)
 
   while (1)
   {
-    
-    // sprintf(msg, "roll:=%f, pitch:=%f\n\r", imu_sensor_data.roll_complementary, imu_sensor_data.pitch_complementary);
-    // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
-
     HAL_Delay(500);
-
-    // sprintf(msg, "1:=%u, 2:=%u, 3:=%u, 4:=%u, 5:=%u\n\r", adc_value[4], adc_value[1], adc_value[0], adc_value[3], adc_value[2]);
-    // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
-
-    // sprintf(msg, "1:=%f\n\r", imu_sensor_data.roll_complementary);
-    // CDC_Transmit_FS((uint8_t *)msg, strlen(msg));
-
-    // HAL_Delay(500);
-
     recognise_gesture_and_send_by_CDC(&imu_sensor_data, &hand, &hand_mid);
   }
 }
@@ -86,12 +72,12 @@ void SysTick_Handler(void)
   HAL_IncTick();
   tick++;
 
-  if(tick >= 20)
-  {
+  // if(tick >= 20)
+  // {
     
 
-    tick = 0;
-  }
+  //   tick = 0;
+  // }
 }
 
 void HAL_I2C_MemRxCpltCallback(I2C_HandleTypeDef *hi2c)

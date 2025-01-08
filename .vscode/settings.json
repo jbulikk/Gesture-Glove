@@ -11,6 +11,7 @@
         "flex.h": "c",
         "decision_unit.h": "c",
         "stdbool.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "adc.h": "c"
     }
 }

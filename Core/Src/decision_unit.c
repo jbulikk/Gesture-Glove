@@ -4,19 +4,16 @@ char msg3[128];
 const char* last_gesture;
 
 GestureConfig gestures[] = {
-//     THUMB         INDEX          MIDDLE           RING            PINKY       E_I        E_M     ROLL_HIGH       ROLL_LOW       PITCH       YAW      ACTION       MESSAGE 
-    {{STRAIGHT},    {BENT},         {BENT},         {BENT},         {BENT},     {EACH},     {EACH},    {75, 110},      {75, 110},/* {,}, {,}, */ "OK"},
-    {{BENT},        {BENT},         {BENT},         {BENT},         {BENT},     {EACH},     {EACH},    {-180,180},     {-180,180},/* {,}, {,}, */ "FIST"},
-    {{STRAIGHT},    {STRAIGHT},     {STRAIGHT},     {STRAIGHT},     {STRAIGHT}, {EACH},     {EACH},    {-180,0},       {0,180},/* {,}, {,}, */ "IDLE"},
-    {{ANY},         {ANY},          {ANY},          {ANY},          {ANY},      {CLOSE},   {APART},  {-180,180},     {-180,180}, /* {,}, {,}, */ "MUKA"},
-    // {{,}, {,}, {,}, {,}, {,}, {,},/*{,}, {,}, {,}, */ "FOUR"},
-    // {{,}, {,}, {,}, {,}, {,}, {,},/*{,}, {,}, {,}, */ "FIVE"},
-    // {{,}, {,}, {,}, {,}, {,}, {,},/*{,}, {,}, {,}, */ ""},
-    // {{,}, {,}, {,}, {,}, {,}, {,},/*{,}, {,}, {,}, */ ""},
-    // {{,}, {,}, {,}, {,}, {,}, {,},/*{,}, {,}, {,}, */ ""},
-    // {{,}, {,}, {,}, {,}, {,}, {,},/*{,}, {,}, {,}, */ ""},
-    // {{,}, {,}, {,}, {,}, {,}, {,},/*{,}, {,}, {,}, */ ""},
-    // {{,}, {,}, {,}, {,}, {,}, {,},/*{,}, {,}, {,}, */ ""},
+//     THUMB         INDEX          MIDDLE           RING            PINKY       E_I        E_M         ROLL_HIGH     ROLL_LOW    PITCH_HIGH    PITCH_LOW  MESSAGE 
+    {{STRAIGHT},    {BENT},         {BENT},         {BENT},         {BENT},     {EACH},     {EACH},    {-90,-25},    {-90,-25},    {-90,60},    {-90,60},  "OK"},
+    {{BENT},        {BENT},         {BENT},         {BENT},         {BENT},     {EACH},     {EACH},    {130, 190},   {-160,0},     {150,190}, {-190,-150}, "FIST"},
+    {{STRAIGHT},    {STRAIGHT},     {STRAIGHT},     {STRAIGHT},     {STRAIGHT}, {EACH},     {EACH},    {130, 190},   {-160,0},     {150,190}, {-190,-150}, "IDLE"},
+    {{STRAIGHT},    {BENT},         {BENT},         {BENT},         {BENT},     {EACH},     {EACH},    {130, 190},   {-160,0},     {150,190}, {-190,-150}, "ONE"},
+    {{STRAIGHT},    {STRAIGHT},     {BENT},         {BENT},         {BENT},     {EACH},     {EACH},    {130, 190},   {-160,0},     {150,190}, {-190,-150}, "TWO"},
+    {{STRAIGHT},    {STRAIGHT},     {STRAIGHT},     {BENT},         {BENT},     {EACH},     {EACH},    {130, 190},   {-160,0},     {150,190}, {-190,-150}, "THREE"}, 
+    {{BENT},        {BENT},         {STRAIGHT},     {STRAIGHT},     {STRAIGHT}, {CLOSE},   {APART},    {-90,-25},    {-90,-25},    {-90,60},    {-90,60},  "ZERO"},
+    {{BENT},        {STRAIGHT},     {STRAIGHT},     {BENT},         {BENT},     {EACH},     {EACH},    {-150, 150},  {-150, 150},  {-120,-90}, {-120,-90}, "VICTORY"},
+    {{STRAIGHT},    {STRAIGHT},     {STRAIGHT},     {STRAIGHT},     {STRAIGHT}, {EACH},     {EACH},    {-150, 150},  {-150, 150},  {-120,-90}, {-120,-90}, "HI"},
 };
 
 bool check_threshold_float(float value, ThresholdAngle threshold)
@@ -64,7 +61,10 @@ bool is_gesture_recognized(GestureConfig *gesture_arg, ImuData *imu_arg, FlexHan
            check_fingers_connected(hand_arg->electrodes.middle, gesture_arg->e_middle) &&
            
            (check_threshold_float(imu_arg->roll_complementary, gesture_arg->roll_high) ||
-            check_threshold_float(imu_arg->roll_complementary, gesture_arg->roll_low));
+            check_threshold_float(imu_arg->roll_complementary, gesture_arg->roll_low)) &&
+            
+            (check_threshold_float(imu_arg->pitch_complementary, gesture_arg->pitch_high) ||
+            check_threshold_float(imu_arg->pitch_complementary, gesture_arg->pitch_low));
 }
 
 void recognise_gesture_and_send_by_CDC(ImuData *imu_arg, FlexHand *hand_arg, FlexHand *hand_mid_arg) {

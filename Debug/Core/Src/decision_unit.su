@@ -1,5 +1,5 @@
-../Core/Src/decision_unit.c:22:6:check_threshold_float	24	static
-../Core/Src/decision_unit.c:27:6:check_threshold_uint16	16	static
-../Core/Src/decision_unit.c:41:6:check_fingers_connected	16	static
-../Core/Src/decision_unit.c:55:6:is_gesture_recognized	24	static
+../Core/Src/decision_unit.c:19:6:check_threshold_float	24	static
+../Core/Src/decision_unit.c:24:6:check_threshold_uint16	16	static
+../Core/Src/decision_unit.c:38:6:check_fingers_connected	16	static
+../Core/Src/decision_unit.c:52:6:is_gesture_recognized	24	static
 ../Core/Src/decision_unit.c:70:6:recognise_gesture_and_send_by_CDC	32	static
