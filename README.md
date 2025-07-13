@@ -11,6 +11,10 @@ integration with the computer via USB HID.
 Future development plans involve further PCB miniaturization using a dedicated integrated circuit, the introduction of a wireless communication interface, and the design of a battery-powered system. Additionally, optimization of the decision algorithm is planned to improve gesture recognition accuracy.
 
 # Overview
+
+🎥 [Demo 1](https://youtube.com/shorts/HhJ9UxrMhsA?si=5mQ5Ls-5uZ076j6t)
+🎥 [Demo 2](https://youtube.com/shorts/HhJ9UxrMhsA?si=OoEMOWHLwrecI-b9)
+
 <img src="https://github.com/user-attachments/assets/77a4931a-13fd-42c5-a8f1-699f04fa6c58" style="width:40%;" />
 <img width="314.5" height="488.5" alt="rekawica" src="https://github.com/user-attachments/assets/a9f0b675-4bfa-4705-b042-856b61e536a9" />
 
