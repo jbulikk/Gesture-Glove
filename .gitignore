@@ -1,0 +1,27 @@
+# Build output
+*.elf
+*.bin
+*.hex
+build/
+dist/
+
+# Object files
+*.o
+*.obj
+
+# Logs
+*.log
+
+# IDE/editor
+.vscode/
+.idea/
+*.sublime-*
+__pycache__/
+
+# Environment
+.env
+
+# Directory
+.metadata
+.settings
+Debug
